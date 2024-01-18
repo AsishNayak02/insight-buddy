@@ -1,4 +1,4 @@
-const ChatbotComponent = (apiEndpoint) => {
+const ChatbotComponent = (apiEndpoint,btncr) => {
   const state = {
     userMessage: '',
     chatHistory: [],
