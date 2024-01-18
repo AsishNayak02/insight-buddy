@@ -228,7 +228,7 @@ function createChatbox(btncr) {
   `;
   document.body.innerHTML += chatboxContent;
 }
-const ChatbotComponent = (apiEndpoint, btncr, title) => {
+const ChatbotComponent = (apiEndpoint, btncr, title,avt) => {
   const state = {
     userMessage: '',
     chatHistory: [],
@@ -270,6 +270,9 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
       avatar: selectedAvatar,
     };
     state.chatHistory = [...state.chatHistory, newUserMessageWithAvatar];
+    // const newUserMessage = { text: userM, sender: 'user' };
+    // state.chatHistory = [...state.chatHistory, newUserMessage];
+    
     //typing
     const botTyping = { text: 'typing...', sender: 'bot' };
     state.chatHistory = [...state.chatHistory, botTyping];
