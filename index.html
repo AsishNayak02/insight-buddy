@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot Example</title>
+  <link rel="stylesheet" href="Chatbot.css">
+</head>
+<body>
+  <script src="ChatbotComponent.js"></script>
+  <script>
+    const apiEndpoint = 'https://fakestoreapi.com/products';
+    const btncr = 'purple';
+    const chatbot = ChatbotComponent(apiEndpoint,btncr);
+    chatbot.render();
+    </script>
+    <script>
+      document.body.onload = function() {createChatbox();}; 
+    </script>
+</body>
+</html>
