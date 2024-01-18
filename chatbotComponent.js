@@ -60,32 +60,67 @@ const ChatbotComponent = (apiEndpoint) => {
   const render = () => {
     const chatbotContainer = document.getElementById('chatbot-container');
     chatbotContainer.innerHTML = '';
-    const chatHistoryDiv = document.createElement('div');
-    chatHistoryDiv.style.height = '200px';
-    chatHistoryDiv.style.overflowY = 'scroll';
-    chatHistoryDiv.style.border = '1px solid #ccc';
-    chatHistoryDiv.style.marginBottom = '10px';
+
+    const cardContainer = document.createElement('div');
+    cardContainer.className = 'card-container';
+
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const titleBar = document.createElement('div');
+    titleBar.className = 'title-bar';
+    titleBar.style.backgroundColor=btncr;
+
+    const icon = document.createElement('span');
+    icon.className = 'icon';
+    icon.textContent = '🤖';
+
+    const h4 = document.createElement('h4');
+    h4.style.color = 'white';
+    h4.textContent = 'Insight Buddy';
+
+    titleBar.appendChild(icon);
+    titleBar.appendChild(h4);
+    card.appendChild(titleBar);
+
+    const chatHistoryContainer = document.createElement('div');
+    chatHistoryContainer.className = 'chat-history-container';
+
     state.chatHistory.forEach((message, index) => {
       const messageDiv = document.createElement('div');
-      messageDiv.style.padding = '5px';
-      messageDiv.style.textAlign = message.sender === 'user' ? 'right' : 'left';
+      messageDiv.className = `chat-message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`;
       messageDiv.textContent = message.text;
-      chatHistoryDiv.appendChild(messageDiv);
+      chatHistoryContainer.appendChild(messageDiv);
     });
-    chatbotContainer.appendChild(chatHistoryDiv);
+
+    card.appendChild(chatHistoryContainer);
+
+    const inputContainer = document.createElement('div');
+    inputContainer.className = 'input-container';
+
     const input = document.createElement('input');
+    input.className = 'user-input';
     input.type = 'text';
     input.value = state.userMessage;
+    input.placeholder = 'Enter Request...';
     input.addEventListener('input', handleUserMessageChange);
+
     const button = document.createElement('button');
+    button.className = 'send-btn';
     button.textContent = 'Send';
+    button.style.backgroundColor=btncr;
     button.addEventListener('click', handleSendMessage);
-    const inputDiv = document.createElement('div');
-    inputDiv.appendChild(input);
-    inputDiv.appendChild(button);
-    chatbotContainer.appendChild(inputDiv);
-  };
-  return {
-    render,
-  };
+
+    inputContainer.appendChild(input);
+    inputContainer.appendChild(button);
+    card.appendChild(inputContainer);
+
+    cardContainer.appendChild(card);
+    chatbotContainer.appendChild(cardContainer);
+    $('#scroll').scrollTop(1000000);
+  }
+
+return {
+  render,
+};
 };
