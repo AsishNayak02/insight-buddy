@@ -64,6 +64,7 @@ margin-right: 400px;
   scrollbar-width: thin;
   scrollbar-color: #030405 #F0F0F0;
 }
+
 .chat-message {
   padding: 10px;
   margin-bottom: 10px;
@@ -233,6 +234,7 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
     state.userMessage='';
     if (!userM.trim()) return;
 
+
     const selectedAvatar = avt;
 
     const newUserMessageWithAvatar = {
@@ -244,6 +246,10 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
     state.chatHistory = [...state.chatHistory, newUserMessageWithAvatar];
     
     
+
+    const newUserMessage = { text: userM, sender: 'user' };
+    state.chatHistory = [...state.chatHistory, newUserMessage];
+
     //typing
     const botTyping = { text: 'typing...', sender: 'bot' };
     state.chatHistory = [...state.chatHistory, botTyping];
@@ -274,6 +280,7 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
         state.chatHistory = [...state.chatHistory, botResponse];
       }
     }
+
     state.chatHistory = state.chatHistory.filter((message) => message.sender !== 'bot' || message.text !== 'typing...');
     render();
   },2000)
@@ -304,6 +311,7 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
       const messageDiv = document.createElement('div');
       messageDiv.className = `chat-message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`;
       messageDiv.textContent = message.text;
+
       if (message.sender === 'user') {
         const avatarSpan = document.createElement('span');
         avatarSpan.className = 'avatar';
@@ -311,6 +319,8 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
   
         chatHistoryContainer.appendChild(avatarSpan);
       }
+
+
       chatHistoryContainer.appendChild(messageDiv);
     });
     card.appendChild(chatHistoryContainer);
