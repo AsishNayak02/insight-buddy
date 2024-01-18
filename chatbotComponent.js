@@ -260,10 +260,17 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
       }
     };
     fetchProducts();
-    if (!state.userMessage.trim()) return;
-    const newUserMessage = { text: state.userMessage, sender: 'user' };
+    const userM = state.userMessage;
+    state.userMessage='';
+    if (!userM.trim()) return;
+    const newUserMessage = { text: userM, sender: 'user' };
     state.chatHistory = [...state.chatHistory, newUserMessage];
-    const sanitizedUserMessage = state.userMessage.toLowerCase().replace(/\s/g, '');
+    //typing
+    const botTyping = { text: 'typing...', sender: 'bot' };
+    state.chatHistory = [...state.chatHistory, botTyping];
+    //typing
+    const sanitizedUserMessage = userM.toLowerCase().replace(/\s/g, '');
+    setTimeout(()=>{
     if (sanitizedUserMessage === 'hi' || sanitizedUserMessage === 'hello') {
       const botResponse = { text: 'Hello! How can I assist you today?', sender: 'bot' };
       state.chatHistory = [...state.chatHistory, botResponse];
@@ -272,7 +279,6 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
       state.chatHistory = [...state.chatHistory, botResponse];
     } else {
       let foundProduct = null;
-      console.log(state.products)
       for (let i = 0; i < state.products.length; i++) {
         const sanitizedTitle = state.products[i].title.toLowerCase().replace(/\s/g, '');
         if (sanitizedTitle.includes(sanitizedUserMessage)) {
@@ -285,12 +291,14 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
         const botResponse = { text: `Price for ${title}: $${price}`, sender: 'bot' };
         state.chatHistory = [...state.chatHistory, botResponse];
       } else {
-        const botResponse = { text: `Product "${state.userMessage}" not found.`, sender: 'bot' };
+        const botResponse = { text: `Product "${userM}" not found.`, sender: 'bot' };
         state.chatHistory = [...state.chatHistory, botResponse];
       }
     }
-    state.userMessage = '';
+    
+    state.chatHistory = state.chatHistory.filter((message) => message.sender !== 'bot' || message.text !== 'typing...');
     render();
+  },2000)
   };
   const render = () => {
     document.body.onload = function() {createChatbox(btncr);};
