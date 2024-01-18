@@ -7,16 +7,6 @@
   <script src="chatbotComponent.js"></script>
 </head>
 <body>
-  <script src="ChatbotComponent.js"></script>
-  <script>
-    const apiEndpoint = 'https://fakestoreapi.com/products';
-    const btncr = 'purple';
-    const title = 'Insight ';
-    const chatbot = ChatbotComponent(apiEndpoint,btncr,title);
-    chatbot.render();
-    </script>
-    <script>
-      document.body.onload = function() {createChatbox('red');}; 
-    </script>
+  <script>ChatbotComponent('https://fakestoreapi.com/products','purple','Inside buddy').render();</script>
 </body>
 </html>
