@@ -243,6 +243,11 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
   const handleUserMessageChange = (e) => {
     state.userMessage = e.target.value;
   };
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
+  };
   const handleSendMessage = () => {
     const fetchProducts = async () => {
       try {
@@ -288,6 +293,7 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
     render();
   };
   const render = () => {
+    document.body.onload = function() {createChatbox();};
     const chatbotContainer = document.getElementById('chatbot-container');
     chatbotContainer.innerHTML = '';
 
@@ -334,6 +340,7 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
     input.value = state.userMessage;
     input.placeholder = 'Enter Request...';
     input.addEventListener('input', handleUserMessageChange);
+    input.addEventListener("keyup", handleKeyPress);
 
     const button = document.createElement('button');
     button.className = 'send-btn';
