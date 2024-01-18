@@ -3,20 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="Chatbot.css"> 
   <title>Chatbot Example</title>
+ 
 </head>
 <body>
+  <script src="ChatbotComponent.js"></script>
   <script>
     const apiEndpoint = 'https://fakestoreapi.com/products';
+    const color = 'purple';
+    const chatbot = ChatbotComponent(apiEndpoint,color);
+    chatbot.render();
   </script>
-<!-- Container for ChatbotComponent -->
-<div id="chatbot-container"></div>
-<script src="ChatbotComponent.js"></script>
-<script>
-  // Create an instance of ChatbotComponent
-  const chatbot = ChatbotComponent(apiEndpoint);
-  // Mount the ChatbotComponent in the container
-  chatbot.render();
-</script>
+
 </body>
 </html>
