@@ -4,10 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chatbot Example</title>
+<<<<<<< HEAD
   <link rel="stylesheet" href="Chatbot.css">
   <script src="chatbotComponent.js"></script>
 </head>
 <body>
   <script>ChatbotComponent('https://fakestoreapi.com/products','purple').render();</script>
+=======
+</head>
+<body>
+  <script src="ChatbotComponent.js"></script>
+  <script>
+    const apiEndpoint = 'https://fakestoreapi.com/products';
+    const btncr = 'purple';
+    const title = 'Insight buddy';
+    const chatbot = ChatbotComponent(apiEndpoint,btncr,title);
+    chatbot.render();
+    </script>
+    <script>
+      document.body.onload = function() {createChatbox('red');}; 
+    </script>
+>>>>>>> 49d1fde3556e8e4d6fbed49d7be34c8546bacabd
 </body>
 </html>
