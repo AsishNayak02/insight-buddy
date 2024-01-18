@@ -1,15 +1,12 @@
 const styles = `
-
 .card-container {
-    
   height: 50vh;
- /* background-image: url("https://images.unsplash.com/photo-1692900856320-91a898b7ecbb?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"); 
+ /* background-image: url("https://images.unsplash.com/photo-1692900856320-91a898b7ecbb?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
   background-repeat: no-repeat;
 background-attachment: fixed;
 background-size: cover; */
 margin-top: 250px;
 margin-right: 400px;
-
 }
 .card {
   background-color: rgba(255, 255, 255, 0.04);
@@ -23,9 +20,7 @@ margin-right: 400px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   overflow: hidden;
   transition: transform 1s ease, width 1s ease;
-  
 }
-
 @keyframes zoom {
   0% {
     transform: scale(1);
@@ -38,7 +33,6 @@ margin-right: 400px;
   }
 }
 .title-bar {
-  
   padding: 10px;
   text-align: center;
   display: flex;
@@ -59,21 +53,17 @@ margin-right: 400px;
   &::-webkit-scrollbar {
       width: 8px;
   }
-
   &::-webkit-scrollbar-track {
-      background: #f0f0f0; 
+      background: #F0F0F0;
   }
-
   &::-webkit-scrollbar-thumb {
-      background-color: #000000; 
-      border-radius: 8px; 
-      border: 2px solid #020405; 
+      background-color: #000000;
+      border-radius: 8px;
+      border: 2px solid #020405;
   }
-
   scrollbar-width: thin;
-  scrollbar-color: #030405 #f0f0f0; 
+  scrollbar-color: #030405 #F0F0F0;
 }
-
 
 .chat-message {
   padding: 10px;
@@ -82,8 +72,6 @@ margin-right: 400px;
   word-wrap: break-word;
   border-radius: 12px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  
-  
 }
 .user-message {
   background-color:purple;
@@ -93,21 +81,20 @@ margin-right: 400px;
   color: #fff;
 }
 #p{
-  background-color: #f06868;
+  background-color: #F06868;
   text-align: right;
   margin-left: auto;
 }
 .bot-message {
-  background-color: #2ecc71;
+  background-color: #2ECC71;
   color: black;
 }
 .input-container {
   display: flex;
   align-items: center;
-  padding: 10px;   
-  background-color: #dad6d6; 
+  padding: 10px;
+  background-color: #DAD6D6;
 }
-
 .user-input {
   flex: 1;
   padding: 8px;
@@ -115,14 +102,12 @@ margin-right: 400px;
   border-radius: 15px;
   margin-right: 8px;
 }
-
 .send-btn {
   padding: 8px 16px;
   color: #fff;
   border: none;
   cursor: pointer;
   border-radius: 15px;
-
 }
 @keyframes fadeIn {
   to {
@@ -137,19 +122,14 @@ margin-right: 400px;
     transform: translateY(0);
   }
 }
-
 @-webkit-keyframes slidein {
   from {background-position: top; background-size:3000px; }
   to {background-position: -100px 0px;background-size:2750px;}
   }
-  
   @keyframes slidein {
   from {background-position: top;background-size:3000px; }
   to {background-position: -100px 0px;background-size:2750px;}
-  
   }
-  
-  
   @keyframes gradient {
       0% {
           background-position: 0% 50%;
@@ -164,7 +144,6 @@ margin-right: 400px;
   body {font-family: Arial, Helvetica, sans-serif;}
   * {box-sizing: border-box;}
 .open-button, .close-button {
-  
   color: white;
   font-size: 24px;
   padding: 14px;
@@ -179,17 +158,13 @@ margin-right: 400px;
   border-radius: 50%;
   transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Add smooth transitions */
 }
-
 .open-button:hover, .close-button:hover {
-  
   transform: scale(1.1); /* Increase the size on hover */
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Add a subtle shadow on hover */
 }
-
 .open-button:active, .close-button:active {
   transform: scale(0.9); /* Decrease the size when clicked */
 }
-
 .chat-popup {
   display: none;
   position: fixed;
@@ -197,7 +172,6 @@ margin-right: 400px;
   right: 15px;
   z-index: 9;
 }
-
 /* .form-container {
   max-width: 300px;
   padding: 10px;
@@ -205,26 +179,22 @@ margin-right: 400px;
   margin-bottom: 70px;
 }
  */`
-
-
 const styleElement = document.createElement('style');
 styleElement.innerHTML = styles;
 document.head.appendChild(styleElement);
-
 function openForm() {
   document.getElementById("myForm").style.display = "block";
 }
 function closeForm() {
   document.getElementById("myForm").style.display = "none";
 }
-
 function createChatbox(btncr) {
   const chatboxContent = `
     <div class="chat-popup" id="myForm">
       <div class="form-container" id="chatbot-container" ></div>
-      <button type="button" class="close-button" onclick="closeForm()" style="background-color: ${btncr};">🤖</button>
+      <button type="button" class="close-button" onclick="closeForm()" style="background-color: ${btncr};">:robot_face:</button>
     </div>
-    <button class="open-button" onclick="openForm()" style="background-color: ${btncr};">🤖</button>
+    <button class="open-button" onclick="openForm()" style="background-color: ${btncr};">:robot_face:</button>
   `;
   document.body.innerHTML += chatboxContent;
 }
@@ -263,8 +233,23 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
     const userM = state.userMessage;
     state.userMessage='';
     if (!userM.trim()) return;
+
+
+    const selectedAvatar = avt;
+
+    const newUserMessageWithAvatar = {
+      text: state.userM,
+      sender: 'user',
+      avatar: selectedAvatar,
+    };
+
+    state.chatHistory = [...state.chatHistory, newUserMessageWithAvatar];
+    
+    
+
     const newUserMessage = { text: userM, sender: 'user' };
     state.chatHistory = [...state.chatHistory, newUserMessage];
+
     //typing
     const botTyping = { text: 'typing...', sender: 'bot' };
     state.chatHistory = [...state.chatHistory, botTyping];
@@ -295,7 +280,7 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
         state.chatHistory = [...state.chatHistory, botResponse];
       }
     }
-    
+
     state.chatHistory = state.chatHistory.filter((message) => message.sender !== 'bot' || message.text !== 'typing...');
     render();
   },2000)
@@ -304,44 +289,43 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
     document.body.onload = function() {createChatbox(btncr);};
     const chatbotContainer = document.getElementById('chatbot-container');
     chatbotContainer.innerHTML = '';
-
     const cardContainer = document.createElement('div');
     cardContainer.className = 'card-container';
-
     const card = document.createElement('div');
     card.className = 'card';
-
     const titleBar = document.createElement('div');
     titleBar.className = 'title-bar';
     titleBar.style.backgroundColor = btncr;
-
     const icon = document.createElement('span');
     icon.className = 'icon';
-    icon.textContent = '🤖';
-
+    icon.textContent = ':robot_face:';
     const h4 = document.createElement('h4');
     h4.style.color = 'white';
     h4.textContent = title;
-
     titleBar.appendChild(icon);
     titleBar.appendChild(h4);
     card.appendChild(titleBar);
-
     const chatHistoryContainer = document.createElement('div');
     chatHistoryContainer.className = 'chat-history-container';
-
     state.chatHistory.forEach((message, index) => {
       const messageDiv = document.createElement('div');
       messageDiv.className = `chat-message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`;
       messageDiv.textContent = message.text;
+
+      if (message.sender === 'user') {
+        const avatarSpan = document.createElement('span');
+        avatarSpan.className = 'avatar';
+        avatarSpan.textContent = message.avatar;
+  
+        chatHistoryContainer.appendChild(avatarSpan);
+      }
+
+
       chatHistoryContainer.appendChild(messageDiv);
     });
-
     card.appendChild(chatHistoryContainer);
-
     const inputContainer = document.createElement('div');
     inputContainer.className = 'input-container';
-
     const input = document.createElement('input');
     input.className = 'user-input';
     input.type = 'text';
@@ -349,22 +333,18 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
     input.placeholder = 'Enter Request...';
     input.addEventListener('input', handleUserMessageChange);
     input.addEventListener("keyup", handleKeyPress);
-
     const button = document.createElement('button');
     button.className = 'send-btn';
     button.textContent = 'Send';
     button.style.backgroundColor = btncr;
     button.addEventListener('click', handleSendMessage);
-
     inputContainer.appendChild(input);
     inputContainer.appendChild(button);
     card.appendChild(inputContainer);
-
     cardContainer.appendChild(card);
     chatbotContainer.appendChild(cardContainer);
     chatHistoryContainer.scrollTop = chatHistoryContainer.scrollHeight;
   }
-
   return {
     render,
   };
