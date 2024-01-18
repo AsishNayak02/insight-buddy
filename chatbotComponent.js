@@ -4,7 +4,7 @@ function openForm() {
 function closeForm() {
   document.getElementById("myForm").style.display = "none";
 }
-// Reusable function to create the chatbox structure
+
 function createChatbox() {
   const chatboxContent = `
     <div class="chat-popup" id="myForm">
@@ -13,8 +13,6 @@ function createChatbox() {
     </div>
     <button class="open-button" onclick="openForm()">🤖</button>
   `;
-
-  // Append the chatbox structure to the body
   document.body.innerHTML += chatboxContent;
 }
 const ChatbotComponent = (apiEndpoint,btncr) => {
@@ -136,7 +134,7 @@ const ChatbotComponent = (apiEndpoint,btncr) => {
 
     cardContainer.appendChild(card);
     chatbotContainer.appendChild(cardContainer);
-    $('#scroll').scrollTop(1000000);
+    chatHistoryContainer.scrollTop = chatHistoryContainer.scrollHeight;
   }
 
 return {
