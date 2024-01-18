@@ -4,7 +4,19 @@ function openForm() {
 function closeForm() {
   document.getElementById("myForm").style.display = "none";
 }
+// Reusable function to create the chatbox structure
+function createChatbox() {
+  const chatboxContent = `
+    <div class="chat-popup" id="myForm">
+      <div class="form-container" id="chatbot-container"></div>
+      <button type="button" class="close-button" onclick="closeForm()">🤖</button>
+    </div>
+    <button class="open-button" onclick="openForm()">🤖</button>
+  `;
 
+  // Append the chatbox structure to the body
+  document.body.innerHTML += chatboxContent;
+}
 const ChatbotComponent = (apiEndpoint,btncr) => {
   const state = {
     userMessage: '',
