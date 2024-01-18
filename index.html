@@ -8,13 +8,14 @@
 <body>
   <script>
     const apiEndpoint = 'https://fakestoreapi.com/products';
+    const btncr = 'purple';
   </script>
 <!-- Container for ChatbotComponent -->
 <div id="chatbot-container"></div>
 <script src="ChatbotComponent.js"></script>
 <script>
   // Create an instance of ChatbotComponent
-  const chatbot = ChatbotComponent(apiEndpoint);
+  const chatbot = ChatbotComponent(apiEndpoint,btncr);
   // Mount the ChatbotComponent in the container
   chatbot.render();
 </script>
