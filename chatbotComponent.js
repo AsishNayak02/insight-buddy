@@ -74,16 +74,6 @@ margin-right: 400px;
   scrollbar-color: #030405 #f0f0f0; 
 }
 
-.avatar {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%; 
-  margin-right: 8px; 
-  background-color: #fff; 
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
-}
 
 .chat-message {
   padding: 10px;
@@ -238,7 +228,7 @@ function createChatbox(btncr) {
   `;
   document.body.innerHTML += chatboxContent;
 }
-const ChatbotComponent = (apiEndpoint, btncr, title,avt) => {
+const ChatbotComponent = (apiEndpoint, btncr, title) => {
   const state = {
     userMessage: '',
     chatHistory: [],
@@ -270,19 +260,17 @@ const ChatbotComponent = (apiEndpoint, btncr, title,avt) => {
       }
     };
     fetchProducts();
-    if (!state.userMessage.trim()) return;
-
-    const selectedAvatar = avt;
-
-    const newUserMessageWithAvatar = {
-      text: state.userMessage,
-      sender: 'user',
-      avatar: selectedAvatar,
-    };
-
-    state.chatHistory = [...state.chatHistory, newUserMessageWithAvatar];
-
-    const sanitizedUserMessage = state.userMessage.toLowerCase().replace(/\s/g, '');
+    const userM = state.userMessage;
+    state.userMessage='';
+    if (!userM.trim()) return;
+    const newUserMessage = { text: userM, sender: 'user' };
+    state.chatHistory = [...state.chatHistory, newUserMessage];
+    //typing
+    const botTyping = { text: 'typing...', sender: 'bot' };
+    state.chatHistory = [...state.chatHistory, botTyping];
+    //typing
+    const sanitizedUserMessage = userM.toLowerCase().replace(/\s/g, '');
+    setTimeout(()=>{
     if (sanitizedUserMessage === 'hi' || sanitizedUserMessage === 'hello') {
       const botResponse = { text: 'Hello! How can I assist you today?', sender: 'bot' };
       state.chatHistory = [...state.chatHistory, botResponse];
@@ -343,19 +331,9 @@ const ChatbotComponent = (apiEndpoint, btncr, title,avt) => {
     chatHistoryContainer.className = 'chat-history-container';
 
     state.chatHistory.forEach((message, index) => {
-
       const messageDiv = document.createElement('div');
       messageDiv.className = `chat-message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`;
       messageDiv.textContent = message.text;
-
-      if (message.sender === 'user') {
-        const avatarSpan = document.createElement('span');
-        avatarSpan.className = 'avatar';
-        avatarSpan.textContent = message.avatar;
-  
-        chatHistoryContainer.appendChild(avatarSpan);
-      }
-
       chatHistoryContainer.appendChild(messageDiv);
     });
 
