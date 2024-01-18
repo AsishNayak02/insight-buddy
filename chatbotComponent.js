@@ -293,7 +293,7 @@ const ChatbotComponent = (apiEndpoint, btncr, title) => {
     render();
   };
   const render = () => {
-    document.body.onload = function() {createChatbox();};
+    document.body.onload = function() {createChatbox(btncr);};
     const chatbotContainer = document.getElementById('chatbot-container');
     chatbotContainer.innerHTML = '';
 
