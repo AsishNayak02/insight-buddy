@@ -224,7 +224,14 @@ const styleElement = document.createElement('style');
 styleElement.innerHTML = styles;
 document.head.appendChild(styleElement);
 
+ let unreadMessagesCount = 0;
+ let btnClose = 0;
+ const audioElement = document.createElement('audio');
+  audioElement.src = 'ping-82822.mp3';
+
 function openForm() {
+  btnClose = 0;
+  unreadMessagesCount = 0;
   document.getElementById("myForm").style.display = "block";
   setTimeout(() => {
     const inputField = document.querySelector('.user-input');
@@ -234,6 +241,7 @@ function openForm() {
   }, 0);
 }
 function closeForm() {
+  btnClose = 1;
   document.getElementById("myForm").style.display = "none";
 }
 
@@ -267,6 +275,15 @@ const ChatbotComponent = (apiEndpoint, btncr, title,avt) => {
       handleSendMessage();
     }
   };
+
+  const handleBeep = (message) => {
+    console.log("handle beep called");
+    if (message.sender === 'bot' && message.text !== 'typing...' && btnClose === 1) {
+      audioElement.play();
+      unreadMessagesCount++;
+    }
+   }
+
   const handleSendMessage = () => {
     const fetchProducts = async () => {
       try {
@@ -296,9 +313,11 @@ const ChatbotComponent = (apiEndpoint, btncr, title,avt) => {
     if (sanitizedUserMessage === 'hi' || sanitizedUserMessage === 'hello') {
       const botResponse = { text: 'Hello! How can I assist you today?', sender: 'bot' };
       state.chatHistory = [...state.chatHistory, botResponse];
+      handleBeep(botResponse);
     } else if (sanitizedUserMessage === 'whoareyou') {
       const botResponse = { text: "I'm a friendly chatbot here to help!", sender: 'bot' };
       state.chatHistory = [...state.chatHistory, botResponse];
+      handleBeep(botResponse);
     } else {
       let foundProduct = null;
       for (let i = 0; i < state.products.length; i++) {
@@ -312,9 +331,11 @@ const ChatbotComponent = (apiEndpoint, btncr, title,avt) => {
         const { id, title, price } = foundProduct;
         const botResponse = { text: `Price for ${title}: $${price}`, sender: 'bot' };
         state.chatHistory = [...state.chatHistory, botResponse];
+        handleBeep(botResponse);
       } else {
         const botResponse = { text: `Product "${userM}" not found.`, sender: 'bot' };
         state.chatHistory = [...state.chatHistory, botResponse];
+        handleBeep(botResponse);
       }
     }
     
