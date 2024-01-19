@@ -229,20 +229,24 @@ margin-right: 400px;
  const styleElement = document.createElement('style');
  styleElement.innerHTML = styles;
  document.head.appendChild(styleElement);
+
  let unreadMessagesCount = 0;
  let btnClose = 0;
  const audioElement = document.createElement('audio');
   audioElement.src = 'ping-82822.mp3';
+
+  function inputFieldFun() {
+    const inputField = document.querySelector('.user-input');
+    //console.log(inputField);
+    inputField.focus();
+  }
  function openForm() {
     btnClose=0;
    document.getElementById("myForm").style.display = "block";
   let unreadMessagesCount = 0;
-  setTimeout(() => {
-    const inputField = document.querySelector('.user-input');
-    if (inputField) {
-      inputField.focus();
-    }
-  }, 0);
+  requestAnimationFrame(() => {
+    inputFieldFun();
+  });
    updatePopupIcon();
  }
  function closeForm() {
@@ -304,7 +308,7 @@ margin-right: 400px;
      }
    };
    const handleBeep = (message) => {
-    console.log("handle beep called");
+    //console.log("handle beep called");
     if (message.sender === 'bot' && message.text !== 'typing...' && btnClose === 1) {
       audioElement.play();
       unreadMessagesCount++;
@@ -320,7 +324,7 @@ margin-right: 400px;
     
   }
    const handleSendMessage = () => {
-    console.log("Send message");
+    //console.log("Send message");
      const fetchProducts = async () => {
        try {
          const response = await fetch(apiEndpoint);
@@ -350,10 +354,16 @@ margin-right: 400px;
          const botResponse = { text: 'Hello! How can I assist you today?', sender: 'bot' };
          state.chatHistory = [...state.chatHistory, botResponse];
          handleBeep(botResponse);
+         requestAnimationFrame(() => {
+          inputFieldFun();
+        });
        } else if (sanitizedUserMessage === 'whoareyou') {
          const botResponse = { text: "I'm a friendly chatbot here to help!", sender: 'bot' };
          state.chatHistory = [...state.chatHistory, botResponse];
          handleBeep(botResponse);
+         requestAnimationFrame(() => {
+          inputFieldFun();
+        });
        } else {
          let foundProduct = null;
          for (let i = 0; i < state.products.length; i++) {
@@ -368,10 +378,16 @@ margin-right: 400px;
            const botResponse = { text: `Price for ${title}: $${price}`, sender: 'bot' };
            state.chatHistory = [...state.chatHistory, botResponse];
            handleBeep(botResponse);
+           requestAnimationFrame(() => {
+            inputFieldFun();
+          });
          } else {
            const botResponse = { text: `Product "${userM}" not found.`, sender: 'bot' };
            state.chatHistory = [...state.chatHistory, botResponse];
            handleBeep(botResponse);
+           requestAnimationFrame(() => {
+            inputFieldFun();
+          });
          }
        }
        state.chatHistory = state.chatHistory.filter((message) => message.sender !== 'bot' || message.text !== 'typing...');
