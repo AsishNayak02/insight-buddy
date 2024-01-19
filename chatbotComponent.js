@@ -229,7 +229,7 @@ margin-right: 400px;
  const styleElement = document.createElement('style');
  styleElement.innerHTML = styles;
  document.head.appendChild(styleElement);
-
+ 
  let unreadMessagesCount = 0;
  let btnClose = 0;
  const audioElement = document.createElement('audio');
