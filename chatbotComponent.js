@@ -2,10 +2,6 @@ const styles = `
 .card-container {
     
   height: 50vh;
- /* background-image: url("https://images.unsplash.com/photo-1692900856320-91a898b7ecbb?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"); 
-  background-repeat: no-repeat;
-background-attachment: fixed;
-background-size: cover; */
 margin-top: 250px;
 margin-right: 400px;
 
@@ -25,17 +21,7 @@ margin-right: 400px;
   
 }
 
-@keyframes zoom {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
+
 .title-bar {
   
   padding: 10px;
@@ -136,43 +122,7 @@ margin-right: 400px;
   border-radius: 15px;
 
 }
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-@keyframes slideIn {
-  from {
-    transform: translateY(-20px);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
 
-@-webkit-keyframes slidein {
-  from {background-position: top; background-size:3000px; }
-  to {background-position: -100px 0px;background-size:2750px;}
-  }
-  
-  @keyframes slidein {
-  from {background-position: top;background-size:3000px; }
-  to {background-position: -100px 0px;background-size:2750px;}
-  
-  }
-  
-  
-  @keyframes gradient {
-      0% {
-          background-position: 0% 50%;
-      }
-      50% {
-          background-position: 100% 50%;
-      }
-      100% {
-          background-position: 0% 50%;
-      }
-  }
   body {font-family: Arial, Helvetica, sans-serif;}
   * {box-sizing: border-box;}
 .open-button{
@@ -205,17 +155,17 @@ margin-right: 400px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Add smooth transitions */
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; 
 }
 
 .open-button:hover, .close-button:hover {
   
-  transform: scale(1.1); /* Increase the size on hover */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Add a subtle shadow on hover */
+  transform: scale(1.1); 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); 
 }
 
 .open-button:active, .close-button:active {
-  transform: scale(0.9); /* Decrease the size when clicked */
+  transform: scale(0.9); 
 }
 
 .chat-popup {
@@ -235,27 +185,34 @@ margin-right: 400px;
   top: 5px;
   right: 5px;
 }
-/* .form-container {
-  max-width: 300px;
-  padding: 10px;
-  background-color: white;
-  margin-bottom: 70px;
+@media only screen and (max-width: 360px)  {
+  .chat-popup {
+    width:80%;
+    margin-right:20px;
+    bottom:20px;
+  }
 }
- */`
- const styleElement = document.createElement('style');
- styleElement.innerHTML = styles;
- document.head.appendChild(styleElement);
- 
- let unreadMessagesCount = 0;
- let btnClose = 0;
- const audioElement = document.createElement('audio');
+@media only screen and (max-width: 400px)  {
+  .chat-popup {
+    width:80%;
+    margin-right:20px;
+    bottom:20px;
+  }
+}
+`
+  const styleElement = document.createElement('style');
+  styleElement.innerHTML = styles;
+  document.head.appendChild(styleElement);
+  let unreadMessagesCount = 0;
+  let btnClose = 0;
+  const audioElement = document.createElement('audio');
   audioElement.src = 'ping-82822.mp3';
 
   function inputFieldFun() {
     const inputField = document.querySelector('.user-input');
-    //console.log(inputField);
     inputField.focus();
   }
+
   function openForm() {
     btnClose = 0;
     document.getElementById("myForm").style.display = "block";
@@ -263,89 +220,80 @@ margin-right: 400px;
     removeRedDotFromButton(openButton);
     const closeButton = document.querySelector('.close-button');
     removeRedDotFromButton(closeButton);
-
-    let unreadMessagesCount = 0;
     requestAnimationFrame(() => {
         inputFieldFun();
     });
     updatePopupIcon();
-}
+  }
 
-function removeRedDotFromButton(button) {
-    const redDot = button.querySelector('.red-dot');
-    if (redDot) {
-        redDot.remove();
-    }
-}
+  function removeRedDotFromButton(button) {
+      const redDot = button.querySelector('.red-dot');
+      if (redDot) {
+          redDot.remove();
+      }
+  }
 
- function closeForm() {
-  btnClose = 1;
-  document.getElementById("myForm").style.display = "none";
-  updateCloseButtonIcon();
-}
- function updatePopupIcon() {
-   const popupIcon = document.querySelector('.open-button');
-   const notificationSymbol = document.querySelector('.notification-symbol');
-   if (unreadMessagesCount > 0) {
-     notificationSymbol.textContent = unreadMessagesCount;
-     notificationSymbol.classList.add('active');
-   } else {
-     notificationSymbol.classList.remove('active');
-   }
-   popupIcon.textContent = '🤖';
-   
- }
- function updateCloseButtonIcon() {
-   const closeButton = document.querySelector('.close-button');
-   const notificationSymbol = document.querySelector('.notification-symbol-close');
-   if (unreadMessagesCount > 0 ) {
-     notificationSymbol.textContent = unreadMessagesCount;
-     notificationSymbol.classList.add('active');
-   } else {
-     notificationSymbol.classList.remove('active');
-   }
-   closeButton.textContent = '❌';
- }
- function createChatbox(btncr) {
-   const chatboxContent = `
-     <div class="chat-popup" id="myForm">
-       <div class="form-container" id="chatbot-container" ></div>
-       <button type="button" class="close-button" onclick="closeForm()" style="background-color: ${btncr};">❌<span class="notification-symbol-close"></span></button>
-     </div>
-     <button class="open-button" onclick="openForm()" style="background-color: ${btncr};">🤖<span class="notification-symbol"></span></button>
-   `;
-   document.body.innerHTML += chatboxContent;
- }
- const ChatbotComponent = (apiEndpoint, btncr, title, avt) => {
+  function closeForm() {
+    btnClose = 1;
+    document.getElementById("myForm").style.display = "none";
+    updateCloseButtonIcon();
+  }
+
+  function updatePopupIcon() {
+    const popupIcon = document.querySelector('.open-button');
+    popupIcon.textContent = '🤖';
+  }
+
+  function updateCloseButtonIcon() {
+    const closeButton = document.querySelector('.close-button');
+    closeButton.textContent = '❌';
+  }
+
+  function createChatbox(btncr) {
+    const chatboxContent = `
+      <div class="chat-popup" id="myForm">
+        <div class="form-container" id="chatbot-container" ></div>
+        <button type="button" class="close-button" onclick="closeForm()" style="background-color: ${btncr};">❌<span class="notification-symbol-close"></span></button>
+      </div>
+      <button class="open-button" onclick="openForm()" style="background-color: ${btncr};">🤖<span class="notification-symbol"></span></button>
+    `;
+    document.body.innerHTML += chatboxContent;
+  }
+  
+  const ChatbotComponent = (apiEndpoint, btncr, title, avt) => {
    const state = {
      userMessage: '',
      chatHistory: [],
      products: [],
    };
+
    const addWelcomeMessage = () => {
      const welcomeMessage = { text: 'Welcome! How can I assist you today?', sender: 'bot' };
      state.chatHistory = [welcomeMessage];
      render();
    };
+   
    const welcomeMessageTimeout = setTimeout(addWelcomeMessage, 1000);
+  
    const handleUserMessageChange = (e) => {
      state.userMessage = e.target.value;
    };
+   
    const handleKeyPress = (e) => {
      if (e.key === 'Enter') {
        handleSendMessage();
      }
    };
+
    const handleBeep = (message) => {
-    //console.log("handle beep called");
     if (message.sender === 'bot' && message.text !== 'typing...' && btnClose === 1) {
       audioElement.play();
-      unreadMessagesCount++;
       addRedDotToButton('.open-button');
       addRedDotToButton('.close-button');
     }
    }
-   function addRedDotToButton(buttonSelector) {
+
+  function addRedDotToButton(buttonSelector) {
     const button = document.querySelector(buttonSelector);
     const redDot = document.createElement('div');
     redDot.className = 'red-dot';
@@ -353,7 +301,6 @@ function removeRedDotFromButton(button) {
     
   }
    const handleSendMessage = () => {
-    //console.log("Send message");
      const fetchProducts = async () => {
        try {
          const response = await fetch(apiEndpoint);
@@ -365,8 +312,10 @@ function removeRedDotFromButton(button) {
        }
      };
      fetchProducts();
+
      const userM = state.userMessage;
      state.userMessage = '';
+
      if (!userM.trim()) return;
      const selectedAvatar = avt;
      const newUserMessageWithAvatar = {
@@ -374,10 +323,12 @@ function removeRedDotFromButton(button) {
        sender: 'user',
        avatar: selectedAvatar,
      };
+
      state.chatHistory = [...state.chatHistory, newUserMessageWithAvatar];
      const botTyping = { text: 'typing...', sender: 'bot' };
      state.chatHistory = [...state.chatHistory, botTyping];
      const sanitizedUserMessage = userM.toLowerCase().replace(/\s/g, '');
+     
      setTimeout(() => {
        if (sanitizedUserMessage === 'hi' || sanitizedUserMessage === 'hello') {
          const botResponse = { text: 'Hello! How can I assist you today?', sender: 'bot' };
@@ -419,10 +370,14 @@ function removeRedDotFromButton(button) {
           });
          }
        }
+      
        state.chatHistory = state.chatHistory.filter((message) => message.sender !== 'bot' || message.text !== 'typing...');
+      
        render();
-     }, 5000);
+    
+      }, 5000);
    };
+   
    const render = () => {
      document.body.onload = function () { createChatbox(btncr); };
      const chatbotContainer = document.getElementById('chatbot-container');
@@ -445,6 +400,7 @@ function removeRedDotFromButton(button) {
      card.appendChild(titleBar);
      const chatHistoryContainer = document.createElement('div');
      chatHistoryContainer.className = 'chat-history-container';
+     
      state.chatHistory.forEach((message, index) => {
        const messageDiv = document.createElement('div');
        messageDiv.className = `chat-message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`;
@@ -457,9 +413,11 @@ function removeRedDotFromButton(button) {
        }
        chatHistoryContainer.appendChild(messageDiv);
      });
+    
      card.appendChild(chatHistoryContainer);
      const inputContainer = document.createElement('div');
      inputContainer.className = 'input-container';
+     
      const input = document.createElement('input');
      input.className = 'user-input';
      input.type = 'text';
@@ -467,16 +425,20 @@ function removeRedDotFromButton(button) {
      input.placeholder = 'Enter Request...';
      input.addEventListener('input', handleUserMessageChange);
      input.addEventListener("keyup", handleKeyPress);
+    
      const button = document.createElement('button');
      button.className = 'send-btn';
      button.textContent = 'Send';
      button.style.backgroundColor = btncr;
      button.addEventListener('click', handleSendMessage);
+     
      inputContainer.appendChild(input);
      inputContainer.appendChild(button);
+    
      card.appendChild(inputContainer);
      cardContainer.appendChild(card);
      chatbotContainer.appendChild(cardContainer);
+    
      chatHistoryContainer.scrollTop = chatHistoryContainer.scrollHeight;
    }
    return {
