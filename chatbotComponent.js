@@ -175,7 +175,7 @@ margin-right: 400px;
   }
   body {font-family: Arial, Helvetica, sans-serif;}
   * {box-sizing: border-box;}
-.open-button, .close-button {
+.open-button{
   
   color: white;
   font-size: 24px;
@@ -183,6 +183,22 @@ margin-right: 400px;
   border: none;
   cursor: pointer;
   opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Add smooth transitions */
+}
+.close-button {
+  
+  color: white;
+  font-size: 24px;
+  padding: 14px;
+  border: none;
+  cursor: pointer;
+  opacity: 1;
   position: fixed;
   bottom: 23px;
   right: 28px;
@@ -240,15 +256,28 @@ margin-right: 400px;
     //console.log(inputField);
     inputField.focus();
   }
- function openForm() {
-    btnClose=0;
-   document.getElementById("myForm").style.display = "block";
-  let unreadMessagesCount = 0;
-  requestAnimationFrame(() => {
-    inputFieldFun();
-  });
-   updatePopupIcon();
- }
+  function openForm() {
+    btnClose = 0;
+    document.getElementById("myForm").style.display = "block";
+    const openButton = document.querySelector('.open-button');
+    removeRedDotFromButton(openButton);
+    const closeButton = document.querySelector('.close-button');
+    removeRedDotFromButton(closeButton);
+
+    let unreadMessagesCount = 0;
+    requestAnimationFrame(() => {
+        inputFieldFun();
+    });
+    updatePopupIcon();
+}
+
+function removeRedDotFromButton(button) {
+    const redDot = button.querySelector('.red-dot');
+    if (redDot) {
+        redDot.remove();
+    }
+}
+
  function closeForm() {
   btnClose = 1;
   document.getElementById("myForm").style.display = "none";
@@ -275,13 +304,13 @@ margin-right: 400px;
    } else {
      notificationSymbol.classList.remove('active');
    }
-   closeButton.textContent = '🤖';
+   closeButton.textContent = '❌';
  }
  function createChatbox(btncr) {
    const chatboxContent = `
      <div class="chat-popup" id="myForm">
        <div class="form-container" id="chatbot-container" ></div>
-       <button type="button" class="close-button" onclick="closeForm()" style="background-color: ${btncr};">🤖<span class="notification-symbol-close"></span></button>
+       <button type="button" class="close-button" onclick="closeForm()" style="background-color: ${btncr};">❌<span class="notification-symbol-close"></span></button>
      </div>
      <button class="open-button" onclick="openForm()" style="background-color: ${btncr};">🤖<span class="notification-symbol"></span></button>
    `;
