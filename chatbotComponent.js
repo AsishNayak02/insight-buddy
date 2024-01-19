@@ -50,6 +50,18 @@ margin-right: 400px;
   margin-right: 8px;
   color: white;
 }
+.avatar {
+  display: flex;
+  float:right;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 1px;
+  margin-top:9px;
+  background-color: #fff;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 .chat-history-container {
   height: 300px;
   padding: 10px;
@@ -89,6 +101,7 @@ margin-right: 400px;
   background-color:purple;
   text-align: right;
   margin-left: auto;
+  margin-right:30px;
   max-width: 50%;
   color: #fff;
 }
@@ -213,6 +226,12 @@ document.head.appendChild(styleElement);
 
 function openForm() {
   document.getElementById("myForm").style.display = "block";
+  setTimeout(() => {
+    const inputField = document.querySelector('.user-input');
+    if (inputField) {
+      inputField.focus();
+    }
+  }, 0);
 }
 function closeForm() {
   document.getElementById("myForm").style.display = "none";
@@ -306,7 +325,7 @@ const ChatbotComponent = (apiEndpoint, btncr, title,avt) => {
     
     state.chatHistory = state.chatHistory.filter((message) => message.sender !== 'bot' || message.text !== 'typing...');
     render();
-  },2000)
+  },5000)
   };
   const render = () => {
     document.body.onload = function() {createChatbox(btncr);};
