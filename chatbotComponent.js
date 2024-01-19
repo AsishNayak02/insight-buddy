@@ -289,13 +289,8 @@ const ChatbotComponent = (apiEndpoint, btncr, title,avt) => {
       avatar: selectedAvatar,
     };
     state.chatHistory = [...state.chatHistory, newUserMessageWithAvatar];
-    // const newUserMessage = { text: userM, sender: 'user' };
-    // state.chatHistory = [...state.chatHistory, newUserMessage];
-    
-    //typing
     const botTyping = { text: 'typing...', sender: 'bot' };
     state.chatHistory = [...state.chatHistory, botTyping];
-    //typing
     const sanitizedUserMessage = userM.toLowerCase().replace(/\s/g, '');
     setTimeout(()=>{
     if (sanitizedUserMessage === 'hi' || sanitizedUserMessage === 'hello') {
