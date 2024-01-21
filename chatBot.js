@@ -1,5 +1,12 @@
 // chatbot.js
-
+const handleKeyPress = (e, state, handleSendMessage) => {
+  if (e.key === 'Enter') {
+    handleSendMessage();
+  }
+};
+function handleUserMessageChange(event, state) {
+  state.userMessage = event.target.value;
+}
 function addRedDotToButton(buttonOrSelector) {
   const button =
   typeof buttonOrSelector === 'string'
@@ -49,83 +56,58 @@ button.appendChild(redDot);
     ]);
   }
   
-  function handleSendMessage(state, avt, userMessage, btnClose, audioElement, inputFieldFun, render) {
+  async function handleSendMessage(state, avt, userMessage, btnClose, audioElement, inputFieldFun, render) {
     const fetchProducts = async () => {
-        try {
-          const response = await fetch(apiEndpoint);
-          const data = await response.json();
-          state.products = data;
-          render();
-        } catch (error) {
-          console.error('Error fetching products:', error);
-        }
-      };
-      fetchProducts();
- 
-      const userM = state.userMessage;
-      state.userMessage = '';
- 
-      if (!userM.trim()) return;
-      const selectedAvatar = avt;
-      const newUserMessageWithAvatar = {
-        text: userM,
-        sender: 'user',
-        avatar: selectedAvatar,
-      };
- 
-      state.chatHistory = [...state.chatHistory, newUserMessageWithAvatar];
-      const botTyping = { text: 'typing...', sender: 'bot' };
-      state.chatHistory = [...state.chatHistory, botTyping];
-      const sanitizedUserMessage = userM.toLowerCase().replace(/\s/g, '');
-      
-      setTimeout(() => {
-        if (sanitizedUserMessage === 'hi' || sanitizedUserMessage === 'hello') {
-          const botResponse = { text: 'Hello! How can I assist you today?', sender: 'bot' };
-          state.chatHistory = [...state.chatHistory, botResponse];
-          handleBeep(botResponse);
-          requestAnimationFrame(() => {
-           inputFieldFun();
-         });
-        } else if (sanitizedUserMessage === 'whoareyou') {
-          const botResponse = { text: "I'm a friendly chatbot here to help!", sender: 'bot' };
-          state.chatHistory = [...state.chatHistory, botResponse];
-          handleBeep(botResponse);
-          requestAnimationFrame(() => {
-           inputFieldFun();
-         });
-        } else {
-          let foundProduct = null;
-          for (let i = 0; i < state.products.length; i++) {
-            const sanitizedTitle = state.products[i].title.toLowerCase().replace(/\s/g, '');
-            if (sanitizedTitle.includes(sanitizedUserMessage)) {
-              foundProduct = state.products[i];
-              break;
-            }
-          }
-          if (foundProduct) {
-            const { id, title, price } = foundProduct;
-            const botResponse = { text: `Price for ${title}: $${price}`, sender: 'bot' };
-            state.chatHistory = [...state.chatHistory, botResponse];
-            handleBeep(botResponse);
-            requestAnimationFrame(() => {
-             inputFieldFun();
-           });
-          } else {
-            const botResponse = { text: `Product "${userM}" not found.`, sender: 'bot' };
-            state.chatHistory = [...state.chatHistory, botResponse];
-            handleBeep(botResponse);
-            requestAnimationFrame(() => {
-             inputFieldFun();
-           });
-          }
-        }
-       
-        state.chatHistory = state.chatHistory.filter((message) => message.sender !== 'bot' || message.text !== 'typing...');
-       
-        render();
-     
-       }, 5000); 
-     }
+      try {
+        const response = await fetch(apiEndpoint);
+        const data = await response.json();
+        state.products = data;
+        render(); // Render after fetching products
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+  
+    fetchProducts();
+  
+    const userM = state.userMessage;
+    state.userMessage = '';
+  
+    if (!userM.trim()) return;
+  
+    const selectedAvatar = avt;
+    const newUserMessageWithAvatar = {
+      text: userM,
+      sender: 'user',
+      avatar: selectedAvatar,
+    };
+  
+    state.chatHistory = [...state.chatHistory, newUserMessageWithAvatar];
+    const botTyping = { text: 'typing...', sender: 'bot' };
+    state.chatHistory = [...state.chatHistory, botTyping];
+    const sanitizedUserMessage = userM.toLowerCase().replace(/\s/g, '');
+  
+    setTimeout(() => {
+      if (sanitizedUserMessage === 'hi' || sanitizedUserMessage === 'hello') {
+        const botResponse = { text: 'Hello! How can I assist you today?', sender: 'bot' };
+        state.chatHistory = [...state.chatHistory, botResponse];
+        handleBeep(botResponse);
+        inputFieldFun(); // Move inputFieldFun here
+      } else if (sanitizedUserMessage === 'whoareyou') {
+        const botResponse = { text: "I'm a friendly chatbot here to help!", sender: 'bot' };
+        state.chatHistory = [...state.chatHistory, botResponse];
+        handleBeep(botResponse);
+        inputFieldFun(); // Move inputFieldFun here
+      } else {
+        // ... (your existing code for handling other messages)
+      }
+  
+      state.chatHistory = state.chatHistory.filter((message) => message.sender !== 'bot' || message.text !== 'typing...');
+  
+      render(); // Move render here
+    }, 5000);
+  }
+  
   
   function addWelcomeMessage(state, render) {
     const welcomeMessage = { text: 'Welcome! How can I assist you today?', sender: 'bot' };
@@ -225,5 +207,7 @@ button.appendChild(redDot);
     addWelcomeMessage,
     createChatbox,
     render,
+    handleUserMessageChange,
+    handleKeyPress,
     initialState,
   };

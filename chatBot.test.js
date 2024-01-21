@@ -11,6 +11,10 @@ import {
   createChatbox,
   render,
   initialState,
+  handleUserMessageChange,
+  handleKeyPress,
+  
+
 } from './chatBot.js';
 
 // Mocking fetch for testing fetchProducts function
@@ -19,8 +23,28 @@ global.fetch = jest.fn(() =>
     json: () => Promise.resolve([]),
   })
 );
-
+ 
 describe('Chatbot Functions', () => {
+ 
+  
+  // handleKeyPress
+  test('handleKeyPress calls handleSendMessage on "Enter" key press', () => {
+    const state = { userMessage: '', chatHistory: [], products: [] };
+    const enterKeyPressEvent = { key: 'Enter' };
+    const handleSendMessageMock = jest.fn();
+    handleKeyPress(enterKeyPressEvent, state, handleSendMessageMock);
+    expect(handleSendMessageMock).toHaveBeenCalled();
+  });
+
+  // handlerUserMessage
+  test('handleUserMessageChange updates userMessage in the state', () => {
+    const state = { userMessage: '', chatHistory: [], products: [] };
+    const inputValue = 'Hello, this is a test message';
+
+    const inputEvent = { target: { value: inputValue } };
+    handleUserMessageChange(inputEvent, state);
+    expect(state.userMessage).toBe('Hello, this is a test message');
+  });
   test('addRedDotToButton adds red dot to the button', () => {
     const button = document.createElement('button');
     document.body.appendChild(button);
@@ -29,6 +53,7 @@ describe('Chatbot Functions', () => {
     expect(redDot).not.toBeNull();
   });
 
+  // RemoveRedDotFromButton Test
   test('removeRedDotFromButton removes red dot from the button', () => {
     const button = document.createElement('button');
     const redDot = document.createElement('div');
@@ -40,6 +65,7 @@ describe('Chatbot Functions', () => {
     expect(removedRedDot).toBeNull();
   });
 
+  // UpdatePopupIcon Test
   test('updatePopupIcon updates the popup icon', () => {
     const popupIcon = document.createElement('span');
     popupIcon.className = 'open-button';
@@ -48,6 +74,7 @@ describe('Chatbot Functions', () => {
     expect(popupIcon.textContent).toBe('🤖');
   });
 
+  // UpdateCloseButtonIcon Test
   test('updateCloseButtonIcon updates the close button icon', () => {
     const closeButton = document.createElement('button');
     closeButton.className = 'close-button';
@@ -56,8 +83,10 @@ describe('Chatbot Functions', () => {
     expect(closeButton.textContent).toBe('❌');
   });
 
+  // HandleBeep Test
   test('handleBeep plays audio and adds red dot', () => {
     const audioElement = document.createElement('audio');
+    const playSpy = jest.spyOn(audioElement, 'play');
     const button = document.createElement('button');
     document.body.appendChild(audioElement);
     document.body.appendChild(button);
@@ -65,10 +94,11 @@ describe('Chatbot Functions', () => {
     const message = { sender: 'bot', text: 'Test message' };
     handleBeep(message, 1, audioElement);
 
-    expect(audioElement.play).toHaveBeenCalled();
+    expect(playSpy).toHaveBeenCalled();
     expect(button.querySelector('.red-dot')).not.toBeNull();
   });
 
+  // FetchProducts Test
   test('fetchProducts fetches products', async () => {
     const apiEndpoint = 'https://example.com/products';
     const products = await fetchProducts(apiEndpoint);
@@ -78,7 +108,8 @@ describe('Chatbot Functions', () => {
     ]);
   });
 
-  test('handleSendMessage sends a message', () => {
+  // HandleSendMessage Test
+  test('handleSendMessage sends a message', async () => {
     const state = { userMessage: 'Hello', chatHistory: [], products: [] };
     const avt = '😊';
     const userMessage = 'Hello';
@@ -86,46 +117,46 @@ describe('Chatbot Functions', () => {
     const audioElement = document.createElement('audio');
     const inputFieldFun = jest.fn();
     const renderFun = jest.fn();
-    handleSendMessage(state, avt, userMessage, btnClose, audioElement, inputFieldFun, renderFun);
-
-    // Add assertions based on the expected behavior of handleSendMessage
+    global.fetch = jest.fn(() => Promise.resolve({ json: () => Promise.resolve([]) }));
+    await handleSendMessage(state, avt, userMessage, btnClose, audioElement, inputFieldFun, renderFun);
     expect(state.chatHistory.length).toBeGreaterThan(0);
     expect(renderFun).toHaveBeenCalled();
+    expect(inputFieldFun).toHaveBeenCalled();
   });
-
+  
+  
+  // AddWelcomeMessage Test
   test('addWelcomeMessage adds a welcome message', () => {
     const state = { userMessage: '', chatHistory: [], products: [] };
     const renderFun = jest.fn();
     addWelcomeMessage(state, renderFun);
 
-    // Add assertions based on the expected behavior of addWelcomeMessage
     expect(state.chatHistory.length).toBeGreaterThan(0);
     expect(renderFun).toHaveBeenCalled();
   });
 
+  // CreateChatbox Test
   test('createChatbox creates a chatbox', () => {
-    const btncr = '#00FF00'; // Replace with the desired button color
+    const btncr = '#00FF00';
     createChatbox(btncr);
-
-    // Add assertions based on the expected structure of the chatbox
     const chatbox = document.querySelector('.chat-popup');
     expect(chatbox).not.toBeNull();
   });
 
+  // Render Test
   test('render updates the chatbot UI', () => {
     const state = { userMessage: 'Hello', chatHistory: [], products: [] };
-    const btncr = '#00FF00'; // Replace with the desired button color
-    const title = 'Chatbot Title'; // Replace with the desired title
+    const btncr = '#00FF00';
+    const title = 'Chatbot Title';
     render(state, btncr, title);
 
-    // Add assertions based on the expected UI changes
     const chatHistoryContainer = document.querySelector('.chat-history-container');
     expect(chatHistoryContainer.scrollTop).toBe(chatHistoryContainer.scrollHeight);
   });
 
+  // InitialState Test
   test('initialState returns the initial state', () => {
     const state = initialState;
-    // Add assertions based on the expected initial state
     expect(state).toEqual({
       userMessage: '',
       chatHistory: [],
