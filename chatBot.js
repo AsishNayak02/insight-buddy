@@ -51,8 +51,25 @@ button.appendChild(redDot);
   function fetchProducts(apiEndpoint) {
     // Mocked data for testing
     return Promise.resolve([
-      { id: 1, title: 'Product1', price: 10 },
-      { id: 2, title: 'Product2', price: 20 },
+      {
+        brand: 'Apple',
+        category: 'smartphones',
+        description: 'An apple mobile which is nothing like apple',
+        discountPercentage: 12.96,
+        id: 1,
+        images: [
+          'https://cdn.dummyjson.com/product-images/1/1.jpg',
+          'https://cdn.dummyjson.com/product-images/1/2.jpg',
+          'https://cdn.dummyjson.com/product-images/1/3.jpg',
+          'https://cdn.dummyjson.com/product-images/1/4.jpg',
+          'https://cdn.dummyjson.com/product-images/1/thumbnail.jpg',
+        ],
+        price: 549,
+        rating: 4.69,
+        stock: 94,
+        thumbnail: 'https://cdn.dummyjson.com/product-images/1/thumbnail.jpg',
+        title: 'iPhone 9',
+      },
     ]);
   }
   

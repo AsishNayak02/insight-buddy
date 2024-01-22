@@ -17,17 +17,47 @@ import {
 
 } from './chatBot.js';
 
-// Mocking fetch for testing fetchProducts function
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve({
-      products: [
-        { id: 1, title: 'Product1', price: 10 },
-        { id: 2, title: 'Product2', price: 20 }
-      ]
-    }),
-  })
-);
+jest.mock('node-fetch');
+
+describe('fetchProducts', () => {
+  it('fetches products from the API', async () => {
+    // Mocking the API response
+    const mockApiResponse = [{
+      brand: 'Apple',
+      category: 'smartphones',
+      description: 'An apple mobile which is nothing like apple',
+      discountPercentage: 12.96,
+      id: 1,
+      images: [
+        'https://cdn.dummyjson.com/product-images/1/1.jpg',
+        'https://cdn.dummyjson.com/product-images/1/2.jpg',
+        'https://cdn.dummyjson.com/product-images/1/3.jpg',
+        'https://cdn.dummyjson.com/product-images/1/4.jpg',
+        'https://cdn.dummyjson.com/product-images/1/thumbnail.jpg',
+      ],
+      price: 549,
+      rating: 4.69,
+      stock: 94,
+      thumbnail: 'https://cdn.dummyjson.com/product-images/1/thumbnail.jpg',
+      title: 'iPhone 9',
+    },];
+
+    // Mocking the fetch function to return the mockApiResponse
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(mockApiResponse),
+      })
+    );
+
+    // Call the fetchProducts function with a mock API endpoint
+    const apiEndpoint = 'https://dummyjson.com/products/1';
+    const products = await fetchProducts(apiEndpoint);
+    // Expect the returned products to match the mockApiResponse
+    expect(products).toStrictEqual(mockApiResponse)
+    global.fetch.mockClear();
+    delete global.fetch;
+  });
+});
  
 describe('Chatbot Functions', () => {
  
@@ -103,15 +133,6 @@ describe('Chatbot Functions', () => {
     expect(button.querySelector('.red-dot')).toBeNull();
   });
 
-  // FetchProducts Test
-  test('fetchProducts fetches products', async () => {
-    const apiEndpoint = 'https://example.com/products';
-    const products = await fetchProducts(apiEndpoint);
-    expect(products).toEqual([
-      { id: 1, title: 'Product1', price: 10 },
-      { id: 2, title: 'Product2', price: 20 },
-    ]);
-  });
 
   // HandleSendMessage Test
   test('handleSendMessage sends a message', async () => {
