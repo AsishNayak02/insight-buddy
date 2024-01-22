@@ -220,7 +220,6 @@ margin-right: 400px;
 
   // Opens the chat form, removes red dots from buttons, and updates the popup icon.
   function openForm(userIcon) {
-    console.log(userIcon); 
     btnClose = 0;
     document.getElementById("myForm").style.display = "block";
     const openButton = document.querySelector('.open-button');
@@ -379,78 +378,122 @@ render();
    };
    
        // Renders the chat UI based on the current state.
-   const render = () => {
-        // Create or update the chatbox in the DOM.
-     document.body.onload = function () { createChatbox(buttonColor, userIcon); };
-     const chatbotContainer = document.getElementById('chatbot-container');
-     chatbotContainer.innerHTML = '';
-     //
-     const cardContainer = document.createElement('div');
-     cardContainer.className = 'card-container';
-     const card = document.createElement('div');
-     card.className = 'card';
-     //
-     const titleBar = document.createElement('div');
-     titleBar.className = 'title-bar';
-     titleBar.style.backgroundColor = buttonColor;
-     //
-     const icon = document.createElement('span');
-     icon.className = 'icon';
-     icon.textContent = userIcon;
-     //
-     const h4 = document.createElement('h4');
-     h4.style.color = 'white';
-     h4.textContent = title;
-     //
-     titleBar.appendChild(icon);
-     titleBar.appendChild(h4);
-     card.appendChild(titleBar);
-     const chatHistoryContainer = document.createElement('div');
-     chatHistoryContainer.className = 'chat-history-container';
-     
-     state.chatHistory.forEach((message, index) => {
-       const messageDiv = document.createElement('div');
-       messageDiv.className = `chat-message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`;
-       messageDiv.textContent = message.text;
-       if (message.sender === 'user') {
-         const avatarSpan = document.createElement('span');
-         avatarSpan.className = 'avatar';
-         avatarSpan.textContent = message.avatar;
-         chatHistoryContainer.appendChild(avatarSpan);
-       }
-       chatHistoryContainer.appendChild(messageDiv);
-     });
+       function createTitleBar(buttonColor, userIcon, title) {
+        const titleBar = document.createElement('div');
+        titleBar.className = 'title-bar';
+        titleBar.style.backgroundColor = buttonColor;
     
-     card.appendChild(chatHistoryContainer);
-     const inputContainer = document.createElement('div');
-     inputContainer.className = 'input-container';
-     const input = document.createElement('input');
-     input.className = 'user-input';
-     input.type = 'text';
-     input.value = state.userMessage;
-     input.placeholder = 'Enter Request...';
-     input.addEventListener('input', handleUserMessageChange);
-     input.addEventListener("keyup", handleKeyPress);
+        const icon = document.createElement('span');
+        icon.className = 'icon';
+        icon.textContent = userIcon;
     
-     const button = document.createElement('button');
-     button.className = 'send-btn';
-     button.textContent = 'Send';
-     button.style.backgroundColor = buttonColor;
-     button.addEventListener('click', handleSendMessage);
-     
-     inputContainer.appendChild(input);
-     inputContainer.appendChild(button);
+        const h4 = document.createElement('h4');
+        h4.style.color = 'white';
+        h4.textContent = title;
     
-     card.appendChild(inputContainer);
-     cardContainer.appendChild(card);
-     chatbotContainer.appendChild(cardContainer);
+        titleBar.appendChild(icon);
+        titleBar.appendChild(h4);
     
-     chatHistoryContainer.scrollTop = chatHistoryContainer.scrollHeight;
-   }
-   return {
-     render,
-   };
- };
+        return titleBar;
+      }
+      const chatHistoryContainer = document.createElement('div');
+      // Function to create a chat history container element
+      function createChatHistoryContainer(state) {
+        // const chatHistoryContainer = document.createElement('div');
+        chatHistoryContainer.className = 'chat-history-container';
+    
+        state.chatHistory.forEach((message, index) => {
+          const messageDiv = document.createElement('div');
+          messageDiv.className = `chat-message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`;
+          messageDiv.textContent = message.text;
+    
+          if (message.sender === 'user') {
+            const avatarSpan = document.createElement('span');
+            avatarSpan.className = 'avatar';
+            avatarSpan.textContent = message.avatar;
+            chatHistoryContainer.appendChild(avatarSpan);
+          }
+    
+          chatHistoryContainer.appendChild(messageDiv);
+        });
+        
+    
+        return chatHistoryContainer;
+      }
+    
+      // Function to create an input container element
+      function createInputContainer(state) {
+        const inputContainer = document.createElement('div');
+        inputContainer.className = 'input-container';
+    
+        const input = document.createElement('input');
+        input.className = 'user-input';
+        input.type = 'text';
+        input.value = state.userMessage;
+        input.placeholder = 'Enter Request...';
+        input.addEventListener('input', handleUserMessageChange);
+        input.addEventListener("keyup", handleKeyPress);
+    
+        const button = document.createElement('button');
+        button.className = 'send-btn';
+        button.textContent = 'Send';
+        button.style.backgroundColor = buttonColor;
+        button.addEventListener('click', handleSendMessage);
+    
+        inputContainer.appendChild(input);
+        inputContainer.appendChild(button);
+    
+        return inputContainer;
+      }
+    
+      // Function to create a card element
+      function createCard(buttonColor, userIcon, title, state) {
+        const card = document.createElement('div');
+        card.className = 'card';
+    
+        const titleBar = createTitleBar(buttonColor, userIcon, title);
+        const chatHistoryContainer = createChatHistoryContainer(state);
+        const inputContainer = createInputContainer(state);
+    
+        card.appendChild(titleBar);
+        card.appendChild(chatHistoryContainer);
+        card.appendChild(inputContainer);
+        
+    
+        return card;
+      }
+    
+      // Function to create a card container element
+      function createCardContainer() {
+        const cardContainer = document.createElement('div');
+        cardContainer.className = 'card-container';
+        return cardContainer;
+      }
+    
+      // Function to create the chat UI dynamically based on the state
+      function createChatUI(buttonColor, userIcon, title, state) {
+        const cardContainer = createCardContainer();
+        const card = createCard(buttonColor, userIcon, title, state);
+    
+        const chatbotContainer = document.getElementById('chatbot-container');
+        chatbotContainer.innerHTML = '';
+    
+        cardContainer.appendChild(card);
+        chatbotContainer.appendChild(cardContainer);
+      }
+    
+    
+      // Renders the chat UI based on the current state.
+      const render = () => {
+    
+        document.body.onload = function () { createChatbox(buttonColor, userIcon); };
+        createChatUI(buttonColor, userIcon, title, state);
+        chatHistoryContainer.scrollTop = chatHistoryContainer.scrollHeight;
+      }
+      return {
+        render,
+      };
+  };
 
 
 
