@@ -301,18 +301,6 @@ margin-right: 400px;
     
   }
    const handleSendMessage = () => {
-     const fetchProducts = async () => {
-       try {
-         const response = await fetch(apiEndpoint);
-         const data = await response.json();
-         state.products = data;
-         render();
-       } catch (error) {
-         console.error('Error fetching products:', error);
-       }
-     };
-     fetchProducts();
-
      const userM = state.userMessage;
      state.userMessage = '';
 
@@ -327,55 +315,43 @@ margin-right: 400px;
      state.chatHistory = [...state.chatHistory, newUserMessageWithAvatar];
      const botTyping = { text: 'typing...', sender: 'bot' };
      state.chatHistory = [...state.chatHistory, botTyping];
-     const sanitizedUserMessage = userM.toLowerCase().replace(/\s/g, '');
      
-     setTimeout(() => {
-       if (sanitizedUserMessage === 'hi' || sanitizedUserMessage === 'hello') {
-         const botResponse = { text: 'Hello! How can I assist you today?', sender: 'bot' };
-         state.chatHistory = [...state.chatHistory, botResponse];
-         handleBeep(botResponse);
-         requestAnimationFrame(() => {
-          inputFieldFun();
-        });
-       } else if (sanitizedUserMessage === 'whoareyou') {
-         const botResponse = { text: "I'm a friendly chatbot here to help!", sender: 'bot' };
-         state.chatHistory = [...state.chatHistory, botResponse];
-         handleBeep(botResponse);
-         requestAnimationFrame(() => {
-          inputFieldFun();
-        });
-       } else {
-         let foundProduct = null;
-         for (let i = 0; i < state.products.length; i++) {
-           const sanitizedTitle = state.products[i].title.toLowerCase().replace(/\s/g, '');
-           if (sanitizedTitle.includes(sanitizedUserMessage)) {
-             foundProduct = state.products[i];
-             break;
-           }
-         }
-         if (foundProduct) {
-           const { id, title, price } = foundProduct;
-           const botResponse = { text: `Price for ${title}: $${price}`, sender: 'bot' };
-           state.chatHistory = [...state.chatHistory, botResponse];
-           handleBeep(botResponse);
-           requestAnimationFrame(() => {
-            inputFieldFun();
-          });
-         } else {
-           const botResponse = { text: `Product "${userM}" not found.`, sender: 'bot' };
-           state.chatHistory = [...state.chatHistory, botResponse];
-           handleBeep(botResponse);
-           requestAnimationFrame(() => {
-            inputFieldFun();
-          });
-         }
-       }
-      
-       state.chatHistory = state.chatHistory.filter((message) => message.sender !== 'bot' || message.text !== 'typing...');
-      
-       render();
-    
-      }, 5000);
+
+     const fetchProducts = async () => {
+      try {
+        console.log(userM);
+        const response = await fetch(apiEndpoint + `${userM}`);
+        const apiResponse = await response.json();
+        console.log(apiResponse);
+        if (apiResponse.products && apiResponse.products.length > 0) {
+          const product = apiResponse.products[0];
+          const title = product.title;
+          const price = product.price || 'Price not specified';
+          const botResponse = { text: `Price for ${title}: $${price}`, sender: 'bot' };
+          state.chatHistory = [...state.chatHistory, botResponse];
+          handleBeep(botResponse);
+          requestAnimationFrame(() => {
+           inputFieldFun();
+         });
+        } else {
+          const botResponse = { text: `Product "${userM}" not found.`, sender: 'bot' };
+          state.chatHistory = [...state.chatHistory, botResponse];
+          handleBeep(botResponse);
+          requestAnimationFrame(() => {
+           inputFieldFun();
+         });
+        }
+        render();
+        }
+         catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+    setTimeout(fetchProducts, 5000);
+    setTimeout(() => {
+  state.chatHistory = state.chatHistory.filter((message) => message.sender !== 'bot' || message.text !== 'typing...');
+}, 5000);
+render();
    };
    
    const render = () => {
