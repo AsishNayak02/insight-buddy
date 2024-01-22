@@ -200,20 +200,27 @@ margin-right: 400px;
   }
 }
 `
+
+  // Creates a style element, adds styles to it, and appends it to the document head.
   const styleElement = document.createElement('style');
   styleElement.innerHTML = styles;
   document.head.appendChild(styleElement);
+
+    // Initializes variables for unread messages count, close button state, and an audio element.
   let unreadMessagesCount = 0;
   let btnClose = 0;
   const audioElement = document.createElement('audio');
   audioElement.src = 'ping-82822.mp3';
 
+  // Focuses on the input field.
   function inputFieldFun() {
     const inputField = document.querySelector('.user-input');
     inputField.focus();
   }
 
-  function openForm() {
+  // Opens the chat form, removes red dots from buttons, and updates the popup icon.
+  function openForm(userIcon) {
+    console.log(userIcon); 
     btnClose = 0;
     document.getElementById("myForm").style.display = "block";
     const openButton = document.querySelector('.open-button');
@@ -223,9 +230,11 @@ margin-right: 400px;
     requestAnimationFrame(() => {
         inputFieldFun();
     });
-    updatePopupIcon();
+    updatePopupIcon(userIcon);
   }
 
+  
+  // Removes red dots from a given button.
   function removeRedDotFromButton(button) {
       const redDot = button.querySelector('.red-dot');
       if (redDot) {
@@ -233,58 +242,68 @@ margin-right: 400px;
       }
   }
 
+  // Closes the chat form and updates the close button icon.
   function closeForm() {
     btnClose = 1;
     document.getElementById("myForm").style.display = "none";
     updateCloseButtonIcon();
   }
 
-  function updatePopupIcon() {
+    // Updates the popup icon with the specified user icon.
+  function updatePopupIcon(userIcon) {
     const popupIcon = document.querySelector('.open-button');
-    popupIcon.textContent = '🤖';
+    popupIcon.textContent = userIcon;
   }
 
+    // Updates the close button icon with a close symbol.
   function updateCloseButtonIcon() {
     const closeButton = document.querySelector('.close-button');
     closeButton.textContent = '❌';
   }
 
-  function createChatbox(btncr) {
+  
+  function createChatbox(buttonColor,userIcon) {
     const chatboxContent = `
       <div class="chat-popup" id="myForm">
         <div class="form-container" id="chatbot-container" ></div>
-        <button type="button" class="close-button" onclick="closeForm()" style="background-color: ${btncr};">❌<span class="notification-symbol-close"></span></button>
+        <button type="button" class="close-button" onclick="closeForm()" style="background-color: ${buttonColor};">❌<span class="notification-symbol-close"></span></button>
       </div>
-      <button class="open-button" onclick="openForm()" style="background-color: ${btncr};">🤖<span class="notification-symbol"></span></button>
+      <button class="open-button" onclick="openForm('${userIcon}')" style="background-color: ${buttonColor};">${userIcon}<span class="notification-symbol"></span></button>
     `;
     document.body.innerHTML += chatboxContent;
   }
   
-  const ChatbotComponent = (apiEndpoint, btncr, title, avt) => {
+    // Main Chatbot component with functions for handling user interactions and rendering.
+  const ChatbotComponent = (apiEndpoint, buttonColor, title, avt, userIcon) => {
    const state = {
      userMessage: '',
      chatHistory: [],
      products: [],
    };
 
+      // Adds a welcome message to the chat history after a timeout.
    const addWelcomeMessage = () => {
      const welcomeMessage = { text: 'Welcome! How can I assist you today?', sender: 'bot' };
      state.chatHistory = [welcomeMessage];
      render();
    };
    
+      // Timeout for adding a welcome message.
    const welcomeMessageTimeout = setTimeout(addWelcomeMessage, 1000);
   
+      // Handle changes in the user message input field.
    const handleUserMessageChange = (e) => {
      state.userMessage = e.target.value;
    };
    
+      // Handles keypress events, triggering message sending on 'Enter'.
    const handleKeyPress = (e) => {
      if (e.key === 'Enter') {
        handleSendMessage();
      }
    };
 
+      // Handles the beep sound for incoming bot messages when the chatbox is closed.
    const handleBeep = (message) => {
     if (message.sender === 'bot' && message.text !== 'typing...' && btnClose === 1) {
       audioElement.play();
@@ -293,6 +312,7 @@ margin-right: 400px;
     }
    }
 
+      // Adds a red dot to the chat button.
   function addRedDotToButton(buttonSelector) {
     const button = document.querySelector(buttonSelector);
     const redDot = document.createElement('div');
@@ -300,14 +320,16 @@ margin-right: 400px;
     button.appendChild(redDot);
     
   }
+
+    // Handles sending a user message, fetching products, and processing bot responses.
    const handleSendMessage = () => {
-     const userM = state.userMessage;
+     const userMsg = state.userMessage;
      state.userMessage = '';
 
-     if (!userM.trim()) return;
+     if (!userMsg.trim()) return;
      const selectedAvatar = avt;
      const newUserMessageWithAvatar = {
-       text: userM,
+       text: userMsg,
        sender: 'user',
        avatar: selectedAvatar,
      };
@@ -319,10 +341,12 @@ margin-right: 400px;
 
      const fetchProducts = async () => {
       try {
-        console.log(userM);
-        const response = await fetch(apiEndpoint + `${userM}`);
+        const response = await fetch(apiEndpoint + `${userMsg}`);
+        if(!response.ok){
+          throw new Error('Failed to fetch data');
+        }
         const apiResponse = await response.json();
-        console.log(apiResponse);
+        
         if (apiResponse.products && apiResponse.products.length > 0) {
           const product = apiResponse.products[0];
           const title = product.title;
@@ -334,7 +358,7 @@ margin-right: 400px;
            inputFieldFun();
          });
         } else {
-          const botResponse = { text: `Product "${userM}" not found.`, sender: 'bot' };
+          const botResponse = { text: `Product "${userMsg}" not found.`, sender: 'bot' };
           state.chatHistory = [...state.chatHistory, botResponse];
           handleBeep(botResponse);
           requestAnimationFrame(() => {
@@ -344,7 +368,7 @@ margin-right: 400px;
         render();
         }
          catch (error) {
-        console.error('Error fetching products:', error);
+          throw error;
       }
     };
     setTimeout(fetchProducts, 5000);
@@ -354,23 +378,30 @@ margin-right: 400px;
 render();
    };
    
+       // Renders the chat UI based on the current state.
    const render = () => {
-     document.body.onload = function () { createChatbox(btncr); };
+        // Create or update the chatbox in the DOM.
+     document.body.onload = function () { createChatbox(buttonColor, userIcon); };
      const chatbotContainer = document.getElementById('chatbot-container');
      chatbotContainer.innerHTML = '';
+     //
      const cardContainer = document.createElement('div');
      cardContainer.className = 'card-container';
      const card = document.createElement('div');
      card.className = 'card';
+     //
      const titleBar = document.createElement('div');
      titleBar.className = 'title-bar';
-     titleBar.style.backgroundColor = btncr;
+     titleBar.style.backgroundColor = buttonColor;
+     //
      const icon = document.createElement('span');
      icon.className = 'icon';
-     icon.textContent = '🤖';
+     icon.textContent = userIcon;
+     //
      const h4 = document.createElement('h4');
      h4.style.color = 'white';
      h4.textContent = title;
+     //
      titleBar.appendChild(icon);
      titleBar.appendChild(h4);
      card.appendChild(titleBar);
@@ -393,7 +424,6 @@ render();
      card.appendChild(chatHistoryContainer);
      const inputContainer = document.createElement('div');
      inputContainer.className = 'input-container';
-     
      const input = document.createElement('input');
      input.className = 'user-input';
      input.type = 'text';
@@ -405,7 +435,7 @@ render();
      const button = document.createElement('button');
      button.className = 'send-btn';
      button.textContent = 'Send';
-     button.style.backgroundColor = btncr;
+     button.style.backgroundColor = buttonColor;
      button.addEventListener('click', handleSendMessage);
      
      inputContainer.appendChild(input);
