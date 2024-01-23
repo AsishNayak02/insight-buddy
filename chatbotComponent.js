@@ -209,8 +209,6 @@ document.head.appendChild(styleElement);
 // Initializes variables for unread messages count, close button state, and an audio element.
 let unreadMessagesCount = 0;
 let btnClose = 0;
-const audioElement = document.createElement('audio');
-audioElement.src = 'ping-82822.mp3';
 
 // Focuses on the input field.
 function inputFieldFun() {
@@ -220,7 +218,6 @@ function inputFieldFun() {
 
 // Opens the chat form, removes red dots from buttons, and updates the popup icon.
 function openForm(userIcon) {
-  console.log(userIcon);
   btnClose = 0;
   document.getElementById("myForm").style.display = "block";
   const openButton = document.querySelector('.open-button');
@@ -243,10 +240,10 @@ function removeRedDotFromButton(button) {
 }
 
 // Closes the chat form and updates the close button icon.
-function closeForm() {
+function closeForm(closeIcon) {
   btnClose = 1;
   document.getElementById("myForm").style.display = "none";
-  updateCloseButtonIcon();
+  updateCloseButtonIcon(closeIcon);
 }
 
 // Updates the popup icon with the specified user icon.
@@ -256,17 +253,17 @@ function updatePopupIcon(userIcon) {
 }
 
 // Updates the close button icon with a close symbol.
-function updateCloseButtonIcon() {
+function updateCloseButtonIcon(closeIcon) {
   const closeButton = document.querySelector('.close-button');
-  closeButton.textContent = '❌';
+  closeButton.textContent = closeIcon;
 }
 
 
-function createChatbox(buttonColor, userIcon) {
+function createChatbox(buttonColor, userIcon, closeIcon) {
   const chatboxContent = `
       <div class="chat-popup" id="myForm">
         <div class="form-container" id="chatbot-container" ></div>
-        <button type="button" class="close-button" onclick="closeForm()" style="background-color: ${buttonColor};">❌<span class="notification-symbol-close"></span></button>
+        <button type="button" class="close-button" onclick="closeForm('${closeIcon}')" style="background-color: ${buttonColor};">${closeIcon}<span class="notification-symbol-close"></span></button>
       </div>
       <button class="open-button" onclick="openForm('${userIcon}')" style="background-color: ${buttonColor};">${userIcon}<span class="notification-symbol"></span></button>
     `;
@@ -274,12 +271,15 @@ function createChatbox(buttonColor, userIcon) {
 }
 
 // Main Chatbot component with functions for handling user interactions and rendering.
-const ChatbotComponent = (apiEndpoint, buttonColor, title, avt, userIcon) => {
+const ChatbotComponent = (apiEndpoint, buttonColor, title, userAvatar, userIcon, closeIcon, notificationAudio) => {
   const state = {
     userMessage: '',
     chatHistory: [],
     products: [],
   };
+  
+  const audioElement = document.createElement('audio');
+  audioElement.src = notificationAudio;
 
   // Adds a welcome message to the chat history after a timeout.
   const addWelcomeMessage = () => {
@@ -327,7 +327,7 @@ const ChatbotComponent = (apiEndpoint, buttonColor, title, avt, userIcon) => {
     state.userMessage = '';
 
     if (!userMsg.trim()) return;
-    const selectedAvatar = avt;
+    const selectedAvatar = userAvatar;
     const newUserMessageWithAvatar = {
       text: userMsg,
       sender: 'user',
@@ -486,7 +486,7 @@ const ChatbotComponent = (apiEndpoint, buttonColor, title, avt, userIcon) => {
   // Renders the chat UI based on the current state.
   const render = () => {
 
-    document.body.onload = function () { createChatbox(buttonColor, userIcon); };
+    document.body.onload = function () { createChatbox(buttonColor, userIcon, closeIcon); };
     createChatUI(buttonColor, userIcon, title, state);
   }
   return {
